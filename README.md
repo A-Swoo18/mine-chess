@@ -4,7 +4,7 @@ Welcome to Mine Chess, a twist on the traditional chess game with hidden landmin
 
 ## Play the Game
 
-You can play the game [here](https://<A-Swoo18>.github.io/<mine-chess>/).
+You can play the game [here](https://A-Swoo18.github.io/mine-chess/).
 
 ## How to Play
 
