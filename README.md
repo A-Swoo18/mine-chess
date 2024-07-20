@@ -13,11 +13,9 @@ You can play the game [here](https://<A-Swoo18>.github.io/<mine-chess>/).
 3. If a piece steps on a landmine, it explodes and the piece is removed.
 4. Landmines can be updated during your turn.
 
-## Repository Contents
+## Credits
 
-- `index.html`: The main HTML file.
-- `css/styles.css`: The CSS file for styling.
-- `js/script.js`: The JavaScript file for game logic.
+- Base-game Chess source code: https://github.com/jahid28/Games/tree/main/CHESS
 
 Feel free to contribute by forking the repository and submitting pull requests.
 
