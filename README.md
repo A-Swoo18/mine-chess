@@ -8,10 +8,10 @@ You can play the game [here](https://A-Swoo18.github.io/mine-chess/).
 
 ## How to Play
 
-1. Each player can place a landmine at the start of the game.
-2. Landmines are hidden from the opponent.
+1. A random landmine will be placed at the beginning of the game.
+2. Landmines are hidden until any piece is placed on it.
 3. If a piece steps on a landmine, it explodes and the piece is removed.
-4. Landmines can be updated during your turn.
+4. After explosion, a new landmine will be located.
 
 ## Credits
 
