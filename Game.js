@@ -372,4 +372,8 @@ class Game {
 		this.triggerEvent('checkMate', color);
 		this.clearEvents();
 	}
+	triggerLandmineExplosion(position) {
+		const piece = this.getPieceByPos(position);
+		if (piece) this.kill(piece);
+	}	
 }

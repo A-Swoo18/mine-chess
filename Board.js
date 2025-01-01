@@ -8,6 +8,17 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
     const blackSematary = document.getElementById('blackSematary');
     const turnSign = document.getElementById('turn');
     let clickedPieceName;
+    //
+    let landminePosition;
+    //
+
+    const placeRandomLandmine = () => {
+        const emptySquares = Array.from(squares).filter(
+            square => !square.querySelector('img')
+        );
+        const randomIndex = Math.floor(Math.random() * emptySquares.length);
+        landminePosition = emptySquares[randomIndex].getAttribute('id');
+    }; 
 
     const resetSematary = () => {
         whiteSematary.querySelectorAll('div').forEach(div => div.innerHTML = '');
@@ -27,6 +38,10 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
         }
 
         document.getElementById('endscene').classList.remove('show');
+
+        //
+        placeRandomLandmine();
+        //
     }
 
     resetBoard();
@@ -72,11 +87,20 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
     }
 
     function movePiece(square) {
-        if (gameState === 'ai_thinking') {
+        if (gameState === 'ai_thinking') return;
+        //
+        const position = square.getAttribute('id');
+        if (position === landminePosition) {
+            const clickedPiece = game.getPieceByName(clickedPieceName);
+            if (clickedPiece) {
+                game.kill(clickedPiece);
+                placeRandomLandmine(); // Set a new landmine after explosion
+            }
             return;
+        //
         }
 
-        const position = square.getAttribute('id');
+        // const position = square.getAttribute('id');
         const existedPiece = game.getPieceByPos(position);
 
         if (existedPiece && existedPiece.color === game.turn) {
