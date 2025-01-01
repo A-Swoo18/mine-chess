@@ -91,10 +91,12 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
         //
         const position = square.getAttribute('id');
         if (position === landminePosition) {
+            square.classList.add('explosion');
             const clickedPiece = game.getPieceByName(clickedPieceName);
             if (clickedPiece) {
                 game.kill(clickedPiece);
-                placeRandomLandmine(); // Set a new landmine after explosion
+                setTimeout(() => square.classList.remove('explosion'), 1000);
+                placeRandomLandmine(); // Set a new landmine 
             }
             return;
         //

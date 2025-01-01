@@ -232,7 +232,7 @@ input[type="radio"]:checked + label {
 
 .explosion {
     background: radial-gradient(circle, red, orange, transparent);
-    animation: explode 1s ease-out;
+    animation: explode 3s ease-out;
 }
 
 @keyframes explode {
