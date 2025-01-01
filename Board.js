@@ -88,18 +88,25 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
 
     function movePiece(square) {
         if (gameState === 'ai_thinking') return;
-        //
+        
         const position = square.getAttribute('id');
+
         if (position === landminePosition) {
             square.classList.add('explosion');
             const clickedPiece = game.getPieceByName(clickedPieceName);
             if (clickedPiece) {
-                game.kill(clickedPiece);
+                // game.kill(clickedPiece);
                 setTimeout(() => square.classList.remove('explosion'), 1000);
+                if(clickedPiece.rnak === 'king') {
+                    const winningColor = clickedPiece.color === 'white' ? 'black' : 'white';
+                    game.triggerEvent('checkMate', winningColor);
+                    return;
+                }
+                game.kill(clickedPiece);
                 placeRandomLandmine(); // Set a new landmine 
             }
             return;
-        //
+        
         }
 
         // const position = square.getAttribute('id');
