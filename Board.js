@@ -103,13 +103,13 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
                     return;
                 }
                 game.kill(clickedPiece);
-                placeRandomLandmine(); // Set a new landmine 
+                placeRandomLandmine();  
             }
             return;
         
         }
 
-        // const position = square.getAttribute('id');
+        
         const existedPiece = game.getPieceByPos(position);
 
         if (existedPiece && existedPiece.color === game.turn) {
