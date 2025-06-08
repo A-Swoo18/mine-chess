@@ -245,3 +245,19 @@ input[type="radio"]:checked + label {
         transform: scale(2);
     }
 }
+.reveal-landmine {
+    padding: 10px 20px;
+    border-radius: 5px;
+    outline: 0;
+    background: #e74c3c;
+    color: white;
+    border: 0;
+    cursor: pointer;
+}
+
+.reveal-landmine:hover {
+    background: #c0392b;
+}
+.landmine-indicator {
+    z-index: 10; /* Ensure it appears above other elements */
+}

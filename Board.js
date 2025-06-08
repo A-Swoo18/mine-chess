@@ -13,11 +13,26 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
     //
 
     const placeRandomLandmine = () => {
-        const emptySquares = Array.from(squares).filter(
-            square => !square.querySelector('img')
-        );
-        const randomIndex = Math.floor(Math.random() * emptySquares.length);
-        landminePosition = emptySquares[randomIndex].getAttribute('id');
+        let randomSquareIndex;
+        let randomSquare;
+        let attempts = 0;
+
+        do {
+            // Generate a random square index
+            randomSquareIndex = Math.floor(Math.random() * squares.length);
+            randomSquare = squares[randomSquareIndex];
+            attempts++;
+
+            // Stop after a reasonable number of attempts to avoid infinite loops
+            if (attempts > 100) {
+                console.error("Unable to find an empty square for the landmine.");
+                return;
+            }
+        } while (game.positionHasExistingPiece(randomSquare.getAttribute('id')));
+
+        // Set the landmine position
+        landminePosition = randomSquare.getAttribute('id');
+        console.log("New landmine placed at:", landminePosition);
     }; 
 
     const resetSematary = () => {
@@ -88,36 +103,40 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
 
     function movePiece(square) {
         if (gameState === 'ai_thinking') return;
-        
+
         const position = square.getAttribute('id');
 
+        // Check if the square contains a landmine
         if (position === landminePosition) {
             square.classList.add('explosion');
             const clickedPiece = game.getPieceByName(clickedPieceName);
             if (clickedPiece) {
-                // game.kill(clickedPiece);
                 setTimeout(() => square.classList.remove('explosion'), 1000);
-                if(clickedPiece.rnak === 'king') {
+
+                // Check if the piece stepping on the landmine is a king
+                if (clickedPiece.rank === 'king') {
                     const winningColor = clickedPiece.color === 'white' ? 'black' : 'white';
                     game.triggerEvent('checkMate', winningColor);
                     return;
                 }
+
+                // Remove the piece and place a new landmine
                 game.kill(clickedPiece);
-                placeRandomLandmine();  
+                placeRandomLandmine();
             }
             return;
-        
         }
 
-        
         const existedPiece = game.getPieceByPos(position);
 
+        // Handle clicking on an existing piece of the same color
         if (existedPiece && existedPiece.color === game.turn) {
             const pieceImg = document.getElementById(existedPiece.name);
             clearSquares();
             return setAllowedSquares(pieceImg);
         }
 
+        // Move the piece
         game.movePiece(clickedPieceName, position);
     }
 
@@ -206,6 +225,45 @@ const startBoard = (game, options = { playAgainst: 'human', aiColor: 'black', ai
         setGameState('checkmate');
     });
 
+    const revealLandmine = () => {
+        if (!landminePosition) {
+            console.error("Landmine position is not set.");
+            return;
+        }
+
+        const landmineSquare = document.getElementById(landminePosition);
+        if (landmineSquare) {
+            console.log("Landmine square found:", landmineSquare);
+
+            // Check if the landmine indicator already exists
+            const existingIndicator = landmineSquare.querySelector('.landmine-indicator');
+            if (existingIndicator) {
+                // If the landmine is already displayed, remove it
+                existingIndicator.remove();
+                console.log("Landmine indicator removed.");
+                return;
+            }
+
+            // Create the landmine icon and position it within the square
+            const mineImage = document.createElement('img');
+            mineImage.src = './img/mine.png'; // Ensure the path matches the actual location
+            mineImage.className = 'landmine-indicator'; // Add a class for styling
+            mineImage.style.position = landminePosition;
+            mineImage.style.width = '90%'; // Fit the square
+            mineImage.style.height = '90%'; // Fit the square
+            mineImage.style.top = '0'; // Align to the top of the square
+            mineImage.style.left = '0'; // Align to the left of the square
+            mineImage.style.pointerEvents = 'none'; // Prevent interaction with the image
+            landmineSquare.appendChild(mineImage);
+            console.log("Landmine indicator displayed.");
+        } else {
+            console.error(`No square found for landmine position: ${landminePosition}`);
+        }
+    };
+
+    // Expose revealLandmine to the global scope
+    window.revealLandmine = revealLandmine;
+
     startTurn('white');
 }
 
@@ -255,6 +313,7 @@ const startNewGame = () => {
     const aiLevel = 'dumb';
     
     startBoard(game, {playAgainst, aiColor, aiLevel});
+    
 }
 
 const showColorSelect = () => document.querySelector('.select-color-container').classList.add('show');
